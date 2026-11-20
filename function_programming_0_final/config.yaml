@@ -1,0 +1,105 @@
+settings:
+  allowedExtensions:
+  - .txt
+  - .log
+  - .md
+  - .csv
+  preserveStructure: true
+  outputDir: output
+  keepAliasMapping: false
+  logFile: pdremover.log
+policies:
+  base:
+    name: base
+    description: Базовая политика со встроенными типами
+    includes: []
+    rules:
+    - id: builtin.phone
+      name: Телефон
+      description: Номер телефона
+      search:
+        type: builtin
+        kind: phone
+      replacement:
+        type: alias
+        prefix: PHONE
+      priority: 10
+      active: true
+    - id: builtin.ipv4
+      name: IPv4
+      description: IPv4-адрес
+      search:
+        type: builtin
+        kind: ipv4
+      replacement:
+        type: alias
+        prefix: IP
+      priority: 10
+      active: true
+    - id: builtin.url
+      name: URL
+      description: URL-адрес
+      search:
+        type: builtin
+        kind: url
+      replacement:
+        type: alias
+        prefix: URL
+      priority: 10
+      active: true
+    - id: builtin.password
+      name: Пароль
+      description: Значение параметра, похожего на пароль
+      search:
+        type: builtin
+        kind: password
+      replacement:
+        type: constant
+        value: '***'
+      priority: 20
+      active: true
+    - id: builtin.token
+      name: Токен
+      description: Токен или ключ доступа
+      search:
+        type: builtin
+        kind: token
+      replacement:
+        type: alias
+        prefix: TOKEN
+      priority: 20
+      active: true
+  strict:
+    name: strict
+    description: Строгая политика (base + усиленная маскировка)
+    includes:
+    - base
+    rules:
+    - id: custom.maskEmail
+      name: Маскировать Email
+      description: Полностью маскирует email (переопределяет base)
+      search:
+        type: builtin
+        kind: email
+      replacement:
+        type: mask
+        keepPrefix: 0
+        keepSuffix: 0
+        maskChar: '*'
+      priority: 100
+      active: true
+  new_pol:
+    name: new_pol
+    description: новая политика
+    includes: []
+    rules:
+    - id: '1'
+      name: ruleName
+      description: description
+      search:
+        type: exact
+        value: '1'
+      replacement:
+        type: delete
+      priority: 30
+      active: true
